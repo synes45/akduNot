@@ -1,0 +1,8 @@
+{
+  "d1_normal": { "_inYear": 60, "k1": 22, "k2": 18, "k3": 30, "k3_anatomi": 18, "k3_histo": 7, "k4": 16, "k4_anatomi": 18, "dsbb": 10, "tdp": 4 },
+  "d1_repeat": { "_inYear": 60, "k1": 14, "k2": 22, "k3": 32, "k3_anatomi": 18, "k3_histo": 7, "k4": 18, "k4_anatomi": 18, "dsbb": 10, "tdp": 4 },
+  "d2_normal": { "_inYear": 60, "k1": 25.13, "k1_anatomi": 18, "k1_histo": 7, "k2": 22.3, "k2_anatomi": 18, "k2_histo": 7, "k3": 23.29, "k3_anatomi": 18, "k3_histo": 7, "k4": 17.3, "k4_anatomi": 18, "k4_histo": 7, "k5": 11.98, "k5_anatomi": 6, "k5_histo": 3, "ocm": 0 },
+  "d2_repeat": { "_inYear": 60, "k1": 25.13, "k1_anatomi": 18, "k1_histo": 7, "k2": 22.3, "k2_anatomi": 18, "k2_histo": 7, "k3": 23.29, "k3_anatomi": 18, "k3_histo": 7, "k4": 17.3, "k4_anatomi": 18, "k4_histo": 7, "k5": 11.98, "k5_anatomi": 6, "k5_histo": 3, "ocm": 0 },
+  "d3_normal": { "_inYear": 60, "k1": 16, "k2": 16, "k3": 16, "k4": 16, "k5": 16, "k6": 16, "tdp": 4 },
+  "d3_repeat": { "_inYear": 60, "k1": 16, "k2": 16, "k3": 16, "k4": 16, "k5": 16, "k6": 16, "tdp": 4 }
+}

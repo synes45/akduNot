@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# /admin gibi yollar için tek sayfa uygulama yönlendirmesi (uzantısız URL'ler)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

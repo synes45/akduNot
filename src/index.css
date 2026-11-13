@@ -1,0 +1,118 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Outfit Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  background-color: #f4f4f5;
+  color: #18181b;
+  min-height: 100%;
+  overflow-x: hidden;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+html.dark {
+  background-color: #09090b;
+  color: #f4f4f5;
+}
+
+/* Tüm tarayıcılarda kaydırma çubuğunu (slide bar) tamamen kaldır */
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  min-height: 100svh;
+  font-family: var(--font-sans);
+  background-color: transparent;
+  color: inherit;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow-x: clip; /* hidden yerine clip kullanarak bağımsız scroll konteyneri oluşmasını ve mouse tekerleğinin takılmasını önler */
+}
+
+/* Yalnızca dokunmatik mobil cihazlarda (iOS Safari / Android) pull-to-refresh'i sınırla */
+@media (pointer: coarse) {
+  body {
+    overscroll-behavior-y: none;
+  }
+}
+
+#root {
+  min-height: 100dvh;
+  min-height: 100svh;
+  background-color: transparent;
+}
+
+/* Statik ay sarısı / toz sarı glowlar — ilk hali gibi dengeli ve net görünür */
+.glow-bg {
+  background:
+    radial-gradient(65% 45% at 0% 0%, rgba(245, 230, 175, 0.36), transparent 70%),
+    radial-gradient(55% 40% at 100% 25%, rgba(240, 222, 160, 0.24), transparent 70%),
+    radial-gradient(70% 45% at 50% 105%, rgba(245, 230, 175, 0.28), transparent 70%);
+  transform: translateZ(0);
+}
+.dark .glow-bg {
+  background:
+    radial-gradient(65% 45% at 0% 0%, rgba(245, 230, 175, 0.18), transparent 70%),
+    radial-gradient(55% 40% at 100% 25%, rgba(240, 222, 160, 0.12), transparent 70%),
+    radial-gradient(70% 45% at 50% 105%, rgba(245, 230, 175, 0.15), transparent 70%);
+}
+
+input { user-select: text; -webkit-user-select: text; }
+button { touch-action: manipulation; }
+
+@layer components {
+  /* Kartlar için yarı saydam yüzey — arkadaki toz sarı glowlar net şekilde görünür */
+  .card-surface {
+    background-color: rgba(255, 255, 255, 0.62);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
+  }
+  .dark .card-surface {
+    background-color: rgba(24, 24, 27, 0.52);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Yalnızca yüzen menü ve dock için hafif, optimize edilmiş cam efekti */
+  .glass {
+    background-color: rgba(255, 255, 255, 0.75);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+  }
+  .dark .glass {
+    background-color: rgba(24, 24, 27, 0.72);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .field {
+    @apply h-12 w-full rounded-2xl border border-transparent bg-zinc-900/[.03] px-4 text-base font-medium text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-[#E8D490] focus:bg-white/80 focus:ring-2 focus:ring-[#E8D490]/20;
+  }
+  .dark .field {
+    @apply bg-white/[.04] text-zinc-100 placeholder:text-zinc-500 focus:bg-white/[.08] focus:border-[#E8D490];
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}

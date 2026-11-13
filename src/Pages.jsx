@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   PERIODS, SYSTEMS, PASS, getSystemKey, getW, getInYear,
-  getBaseW, getBaseInYear, getTotal, weightSum, getUnitPref, setUnitPref, unitTotal, toView, fromView, unitSym, isPersonalOn, setPersonalOn, setPersonal, getPersonalRaw, clearPersonal,
+  getBaseW, getBaseInYear, getTotal, weightSum, getUnitPref, unitTotal, toView, fromView, unitSym, isPersonalOn, setPersonalOn, setPersonal, getPersonalRaw, clearPersonal,
   getPracW, getBasePracW, getTheoryW,
 } from './config';
 import { fmt, buzz, clean, num, wText } from './calc';
@@ -228,17 +228,6 @@ function PersonalWeights({ period: p0, isRepeat: r0, say }) {
   );
 }
 
-function UnitPanel() {
-  const [u, setU] = useState(getUnitPref);
-  return (
-    <Panel title="Ağırlık gösterimi">
-      <Seg id="unit" value={u} onChange={v => { setUnitPref(v); setU(v); }}
-        items={[{ id: 'credit', label: 'Kredi' }, { id: 'pct', label: 'Yüzde' }]} />
-      <p className="mt-2.5 text-[11.5px] leading-relaxed text-zinc-400">Kredi ile belirlenen dönemlerde (Dönem 2) ağırlıklar seçtiğin birimde görünür ve girilir. Hesaplama aynıdır.</p>
-    </Panel>
-  );
-}
-
 export function Settings({ theme, setTheme, onClearAll, period, isRepeat, say }) {
   return (
     <div>
@@ -246,7 +235,6 @@ export function Settings({ theme, setTheme, onClearAll, period, isRepeat, say })
         <Seg id="theme" value={theme} onChange={setTheme}
           items={[{ id: 'auto', label: 'Otomatik' }, { id: 'light', label: 'Açık' }, { id: 'dark', label: 'Koyu' }]} />
       </Panel>
-      <UnitPanel />
       <PersonalWeights period={period} isRepeat={isRepeat} say={say} />
       <Panel title="Veriler">
         <P>Girdiğin notlar yalnızca bu cihazda saklanır.</P>

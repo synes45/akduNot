@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { PERIODS, SYSTEMS, getSystemKey, getW, getInYear, isPersonalOn } from './config';
+import { PERIODS, SYSTEMS, getSystemKey, getW, getInYear, isPersonalOn, getTotal, getUnitPref, setUnitPref } from './config';
 import { fieldsOf, itemScore, has, clean, fmt, buzz, wText } from './calc';
 import { Seg, Field, Chevron, soft } from './ui';
 
@@ -78,6 +78,24 @@ function GroupCard({ sysKey, items, s, setScore }) {
   );
 }
 
+function SwitchBox({ label, on, onChange }) {
+  return (
+    <div className="card-surface flex items-center justify-between gap-2 rounded-2xl px-4 py-3">
+      <span className="text-[13px] font-semibold text-zinc-900 dark:text-white">{label}</span>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={on}
+        aria-label={label}
+        onClick={onChange}
+        className={`relative inline-flex h-7 w-12 flex-none items-center rounded-full transition-colors ${on ? 'bg-[#E8D184]' : 'bg-zinc-200 dark:bg-white/15'}`}
+      >
+        <span className={`inline-block size-5.5 rounded-full bg-white shadow-md transition-transform duration-200 ease-out ${on ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
+      </button>
+    </div>
+  );
+}
+
 export default function Calc({
   period,
   setPeriod,
@@ -93,6 +111,7 @@ export default function Calc({
   const s = scores[sysKey] || {};
   const b = 100 - getInYear(sysKey);
   const personal = isPersonalOn();
+  const creditSys = getTotal(sysKey) !== 100;
 
   return (
     <div>
@@ -111,40 +130,12 @@ export default function Calc({
         </div>
       )}
 
-      {/* 2. Seçenek: Dönem tekrarıyım toggle — ferah aralıklar */}
-      <div className="mt-4 flex items-center justify-between rounded-2xl card-surface px-4 py-3">
-        <div className="flex items-center gap-2.5">
-          <span className="grid size-8 place-items-center rounded-xl bg-[#F5E6B3]/20 text-[#8F6D1D] dark:text-[#F3E5AB]">
-            <svg viewBox="0 0 24 24" className="size-4 fill-none stroke-current" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.3L3 16M3 21v-5h5" />
-            </svg>
-          </span>
-          <div>
-            <span className="text-[13px] font-semibold text-zinc-900 dark:text-white">Dönem tekrarıyım</span>
-            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-              {isRepeat ? `${sys?.name} tekrar ağırlıkları aktif` : `${sys?.name} normal ağırlıkları aktif`}
-            </p>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          role="switch"
-          aria-checked={isRepeat}
-          onClick={() => {
-            buzz(8);
-            setIsRepeat(!isRepeat);
-          }}
-          className={`relative inline-flex h-7 w-12 flex-none items-center rounded-full transition-colors ${
-            isRepeat ? 'bg-[#E8D184]' : 'bg-zinc-200 dark:bg-white/15'
-          }`}
-        >
-          <span
-            className={`inline-block size-5.5 rounded-full bg-white shadow-md transition-transform duration-200 ease-out ${
-              isRepeat ? 'translate-x-5.5' : 'translate-x-0.5'
-            }`}
-          />
-        </button>
+      {/* Dönem tekrarı + (kredi sistemli dönemlerde) yüzdelik gösterimi */}
+      <div className={`mt-4 grid gap-3 ${creditSys ? 'grid-cols-2' : ''}`}>
+        <SwitchBox label="Dönem tekrarı" on={isRepeat} onChange={() => { buzz(8); setIsRepeat(!isRepeat); }} />
+        {creditSys && (
+          <SwitchBox label="Yüzdelik kullan" on={getUnitPref() === 'pct'} onChange={() => { buzz(8); setUnitPref(getUnitPref() === 'pct' ? 'credit' : 'pct'); }} />
+        )}
       </div>
 
       {/* Komiteler listesi — aralar açık, nefes alan ferah yerleşim */}

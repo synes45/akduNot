@@ -256,7 +256,7 @@ export function Settings({ theme, setTheme, onClearAll, period, isRepeat, say })
           />
         </div>
         <p className="mt-3 text-[13px] font-semibold tracking-tight text-zinc-800 dark:text-zinc-200">
-          akdutip<span className="text-[#E5CD82]">✦</span>space
+          akdutip<span className="text-[#E5CD82]">✦</span>com
         </p>
         <p className="mt-1 max-w-[320px] text-[11.5px] leading-relaxed text-zinc-500 dark:text-zinc-400">
           Akdeniz TÖB Proje ve Girişimler bünyesinde <br />

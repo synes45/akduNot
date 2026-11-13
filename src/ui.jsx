@@ -13,13 +13,13 @@ export function Star({ className = '' }) {
   );
 }
 
-/** akdutip✦space — nokta yerine 4 köşeli yıldız, "space" üstte */
+/** akdutip✦com — nokta yerine 4 köşeli yıldız, "com" üstte */
 export function Logo({ className = '' }) {
   return (
-    <a href="/" className={`relative z-10 inline-flex items-start select-none ${className}`} aria-label="akdutip.space">
+    <a href="/" className={`relative z-10 inline-flex items-start select-none ${className}`} aria-label="akdutip.com">
       <span className="text-[22px] font-bold leading-none tracking-tight text-zinc-900 dark:text-white">akdutip</span>
       <Star className="mx-[3px] mt-[3px] size-[13px] text-[#F3E5AB] drop-shadow-[0_0_8px_rgba(243,229,171,0.65)]" />
-      <span className="-mt-[2px] text-[11px] font-semibold leading-none tracking-wide text-zinc-400 dark:text-zinc-500">space</span>
+      <span className="-mt-[2px] text-[11px] font-semibold leading-none tracking-wide text-zinc-400 dark:text-zinc-500">com</span>
     </a>
   );
 }

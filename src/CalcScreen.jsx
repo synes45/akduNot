@@ -60,6 +60,24 @@ function Committee({ sysKey, item, s, setScore, collapsedFlag, setFlag }) {
   );
 }
 
+function GroupCard({ sysKey, items, s, setScore }) {
+  return (
+    <section className="card-surface mb-5 rounded-3xl p-5">
+      <div className="flex items-center justify-between pb-3.5">
+        <span className="text-[15px] font-semibold text-zinc-900 dark:text-white">{items[0].group}</span>
+        <span className="rounded-full border border-[#F5E6B3]/30 bg-[#F5E6B3]/20 px-2.5 py-0.5 text-xs font-semibold text-[#8F6D1D] dark:text-[#F3E5AB]">
+          {wText(sysKey, items.reduce((a, i) => a + getW(sysKey, i), 0))}
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-x-3">
+        {items.map(i => (
+          <Field key={i.id} label={i.label} hint={wText(sysKey, getW(sysKey, i))} value={s?.[i.id]} onChange={v => setScore(i.id, clean(v, 100))} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function Calc({
   period,
   setPeriod,
@@ -131,7 +149,15 @@ export default function Calc({
 
       {/* Komiteler listesi — aralar açık, nefes alan ferah yerleşim */}
       <div key={sysKey} className="mt-6">
-        {sys.items.map(item => {
+        {sys.items.reduce((blocks, item) => {
+          const last = blocks[blocks.length - 1];
+          if (item.group && last?.[0].group === item.group) last.push(item); else blocks.push([item]);
+          return blocks;
+        }, []).map(block => {
+          if (block[0].group) {
+            return <GroupCard key={block[0].id} sysKey={sysKey} items={block} s={s} setScore={(id, v) => setScore(sysKey, id, v)} />;
+          }
+          const item = block[0];
           const key = `${sysKey}.${item.id}`;
           return (
             <Committee

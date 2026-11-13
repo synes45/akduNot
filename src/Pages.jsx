@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   PERIODS, SYSTEMS, PASS, getSystemKey, getW, getInYear,
-  getBaseW, getBaseInYear, getTotal, weightSum, isPersonalOn, setPersonalOn, setPersonal, getPersonalRaw, clearPersonal,
+  getBaseW, getBaseInYear, getTotal, weightSum, getUnitPref, setUnitPref, unitTotal, toView, fromView, unitSym, isPersonalOn, setPersonalOn, setPersonal, getPersonalRaw, clearPersonal,
   getPracW, getBasePracW, getTheoryW,
 } from './config';
 import { fmt, buzz, clean, num, wText } from './calc';
@@ -102,28 +102,29 @@ const Switch = ({ on, onChange, label }) => (
   </button>
 );
 
-/** Tek bir kişisel yüzde kutusu. Boş bırakılırsa resmi değer (placeholder) kullanılır. */
-function PInput({ sysKey, k, official, unit = '%' }) {
+/** Tek bir kişisel kutu. Boş bırakılırsa resmi değer (placeholder) kullanılır.
+ * weight: kalem ağırlığı (kredi/yüzde tercihine göre gösterilir); değilse düz yüzde. */
+function PInput({ sysKey, k, official, weight }) {
   const raw = getPersonalRaw(sysKey, k);
-  const [draft, setDraft] = useState(raw === undefined ? '' : String(raw).replace('.', ','));
-  useEffect(() => {
-    setDraft(raw === undefined ? '' : String(raw).replace('.', ','));
-  }, [sysKey, raw]);
+  const view = v => (weight ? toView(sysKey, v) : v);
+  const show = v => (v === undefined ? '' : String(Math.round(view(v) * 100) / 100).replace('.', ','));
+  const [draft, setDraft] = useState(show(raw));
+  useEffect(() => { setDraft(show(raw)); }, [sysKey, raw, getUnitPref()]);
   return (
     <div className="relative w-24">
       <input
         className="field !h-10 !rounded-xl pr-8 text-right !text-[15px]"
         type="text"
         inputMode="decimal"
-        placeholder={fmt(official)}
+        placeholder={fmt(view(official))}
         value={draft}
         onChange={e => {
-          const v = clean(e.target.value, 100);
+          const v = clean(e.target.value, weight ? unitTotal(sysKey) : 100);
           setDraft(v);
-          setPersonal(sysKey, k, v === '' ? undefined : num(v));
+          setPersonal(sysKey, k, v === '' ? undefined : weight ? fromView(sysKey, num(v)) : num(v));
         }}
       />
-      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400">{unit}</span>
+      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400">{weight ? unitSym(sysKey) : '%'}</span>
     </div>
   );
 }
@@ -181,7 +182,7 @@ function PersonalWeights({ period: p0, isRepeat: r0, say }) {
                             </span>
                           )}
                         </div>
-                        <PInput sysKey={sysKey} k={i.id} official={getBaseW(sysKey, i)} unit={getTotal(sysKey) === 100 ? '%' : 'kr'} />
+                        <PInput sysKey={sysKey} k={i.id} official={getBaseW(sysKey, i)} weight />
                       </div>
 
                       {hasPrac && (
@@ -209,7 +210,7 @@ function PersonalWeights({ period: p0, isRepeat: r0, say }) {
 
               <div className="mt-2 flex justify-between border-t border-zinc-900/8 pt-3 text-sm font-medium dark:border-white/10">
                 <span>Komite toplamı</span>
-                <span className={ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>{wText(sysKey, sum)}{ok ? ' ✓' : ` · ${total} olmalı`}</span>
+                <span className={ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>{wText(sysKey, sum)}{ok ? ' ✓' : ` · ${unitTotal(sysKey)} olmalı`}</span>
               </div>
               <p className="mt-2 text-[11.5px] leading-relaxed text-zinc-400">Boş bıraktığın kutular resmi değeri (soluk yazan) kullanır. Komite içindeki Anatomi/Histoloji pratik paylarını da dilediğin gibi değiştirebilirsin.</p>
 
@@ -227,6 +228,17 @@ function PersonalWeights({ period: p0, isRepeat: r0, say }) {
   );
 }
 
+function UnitPanel() {
+  const [u, setU] = useState(getUnitPref);
+  return (
+    <Panel title="Ağırlık gösterimi">
+      <Seg id="unit" value={u} onChange={v => { setUnitPref(v); setU(v); }}
+        items={[{ id: 'credit', label: 'Kredi' }, { id: 'pct', label: 'Yüzde' }]} />
+      <p className="mt-2.5 text-[11.5px] leading-relaxed text-zinc-400">Kredi ile belirlenen dönemlerde (Dönem 2) ağırlıklar seçtiğin birimde görünür ve girilir. Hesaplama aynıdır.</p>
+    </Panel>
+  );
+}
+
 export function Settings({ theme, setTheme, onClearAll, period, isRepeat, say }) {
   return (
     <div>
@@ -234,6 +246,7 @@ export function Settings({ theme, setTheme, onClearAll, period, isRepeat, say })
         <Seg id="theme" value={theme} onChange={setTheme}
           items={[{ id: 'auto', label: 'Otomatik' }, { id: 'light', label: 'Açık' }, { id: 'dark', label: 'Koyu' }]} />
       </Panel>
+      <UnitPanel />
       <PersonalWeights period={period} isRepeat={isRepeat} say={say} />
       <Panel title="Veriler">
         <P>Girdiğin notlar yalnızca bu cihazda saklanır.</P>

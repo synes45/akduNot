@@ -1,10 +1,13 @@
-import { SYSTEMS, PDO_RATIO, PASS, getTotal, getW, getInYear, getPracW, getTheoryW } from './config';
+import { SYSTEMS, PDO_RATIO, PASS, getTotal, isCreditView, toView, getW, getInYear, getPracW, getTheoryW } from './config';
 
 export const num = v => Number(String(v).replace(',', '.'));
 export const has = v => v !== undefined && v !== '' && !isNaN(num(v));
 export const fmt = n => (Math.round(n * 100) / 100).toString().replace('.', ',');
-/** Kalem ağırlığını yazıya çevirir: yüzde sistemlerinde %22, kredi sistemlerinde 14 kredi */
-export const wText = (sysKey, v) => (getTotal(sysKey) === 100 ? `%${fmt(v)}` : `${fmt(v)} kredi`);
+/** Kalem ağırlığını yazıya çevirir (v sistemin kendi biriminde). native: tercihe bakmadan sistemin biriminde yaz (admin) */
+export const wText = (sysKey, v, native) => {
+  const credit = native ? getTotal(sysKey) !== 100 : isCreditView(sysKey);
+  return credit ? `${fmt(v)} kredi` : `%${fmt(native ? v : toView(sysKey, v))}`;
+};
 export const buzz = ms => { try { navigator.vibrate?.(ms); } catch { /* yok say */ } };
 
 /** Girdiyi temizler: yalnızca rakam ve tek ondalık ayracı, üst sınıra kırpar. */

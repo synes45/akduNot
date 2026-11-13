@@ -241,7 +241,7 @@ export default function Admin() {
                   <div className="flex items-center justify-between py-1.5"><span className="text-sm">Yıl içi payı</span><WInput t={t} k="_inYear" /></div>
                   <div className="mt-2 flex justify-between border-t border-zinc-900/8 pt-3 text-sm font-medium dark:border-white/10">
                     <span>Komite toplamı</span>
-                    <span className={ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>{wText(t, sum)}{ok ? ' ✓' : ` · ${total} olmalı`}</span>
+                    <span className={ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>{wText(t, sum, true)}{ok ? ' ✓' : ` · ${total} olmalı`}</span>
                   </div>
                 </section>
               );

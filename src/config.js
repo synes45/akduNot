@@ -33,7 +33,8 @@ const D2_ITEMS = [
   { id: 'k5', label: 'Komite 5', w: 6, pdo: true, prac: D2_PRAC },
   { id: 'ocm', label: 'ÖÇM', w: 3 },
   { id: 'dsbb', label: 'DSBB', w: 2 },
-  { id: 'makale_edebiyat', label: 'Makale saati + Edebiyat', w: 3 },
+  { id: 'makale', label: 'Makale saati', w: 1, group: 'Makale saati + Edebiyat' },
+  { id: 'edebiyat', label: 'Edebiyat', w: 2, group: 'Makale saati + Edebiyat' },
 ];
 
 export const SYSTEMS = {
@@ -107,6 +108,23 @@ export const SYSTEM_KEYS = Object.keys(SYSTEMS);
 
 /** Kalem ağırlıklarının toplamı: 100 (yüzde) ya da kredi toplamı (örn. Dönem 2 = 60) */
 export const getTotal = sysKey => SYSTEMS[sysKey]?.total ?? 100;
+
+/* Gösterim tercihi (yalnızca bu cihaz): kredi sistemindeki dönemlerde ağırlıklar kredi ya da yüzde görünür.
+ * Değerler hep sistemin kendi biriminde saklanır, hesaplama değişmez. */
+const UNIT_KEY = 'atn_unit';
+let unit = 'credit';
+try { if (localStorage.getItem(UNIT_KEY) === 'pct') unit = 'pct'; } catch { /* yok say */ }
+export const getUnitPref = () => unit;
+export const setUnitPref = u => {
+  unit = u;
+  try { localStorage.setItem(UNIT_KEY, u); } catch { /* dolu */ }
+  window.dispatchEvent(new Event('atn-weights'));
+};
+export const isCreditView = sysKey => getTotal(sysKey) !== 100 && unit === 'credit';
+export const unitTotal = sysKey => (isCreditView(sysKey) ? getTotal(sysKey) : 100);
+export const toView = (sysKey, v) => (v * unitTotal(sysKey)) / getTotal(sysKey);
+export const fromView = (sysKey, v) => (v * getTotal(sysKey)) / unitTotal(sysKey);
+export const unitSym = sysKey => (isCreditView(sysKey) ? 'kr' : '%');
 
 let remote = {};
 const readLocal = (key = LOCAL_KEY) => {

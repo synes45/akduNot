@@ -1,8 +1,10 @@
-import { SYSTEMS, PDO_RATIO, PASS, getW, getInYear, getPracW, getTheoryW } from './config';
+import { SYSTEMS, PDO_RATIO, PASS, getTotal, getW, getInYear, getPracW, getTheoryW } from './config';
 
 export const num = v => Number(String(v).replace(',', '.'));
 export const has = v => v !== undefined && v !== '' && !isNaN(num(v));
 export const fmt = n => (Math.round(n * 100) / 100).toString().replace('.', ',');
+/** Kalem ağırlığını yazıya çevirir: yüzde sistemlerinde %22, kredi sistemlerinde 14 kredi */
+export const wText = (sysKey, v) => (getTotal(sysKey) === 100 ? `%${fmt(v)}` : `${fmt(v)} kredi`);
 export const buzz = ms => { try { navigator.vibrate?.(ms); } catch { /* yok say */ } };
 
 /** Girdiyi temizler: yalnızca rakam ve tek ondalık ayracı, üst sınıra kırpar. */
@@ -60,7 +62,7 @@ export function compute(sysKey, s) {
       filled += fs.filter(f => has(s?.[f.id])).length;
       const sc = itemScore(item, s || {}, sysKey);
       if (sc === null) ready = false;
-      else total += sc * w / 100;
+      else total += sc * w / getTotal(sysKey);
     } else {
       // 0 ağırlıklı kalemler (örn: varsayılan ÖÇM)
       const filledSub = fs.filter(f => has(s?.[f.id])).length;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { SYSTEMS, SYSTEM_KEYS, getBaseW, getBaseInYear, getBasePracW, setLocal, clearLocal, baseWeightSum, exportJson } from './config';
-import { num, fmt, buzz } from './calc';
+import { SYSTEMS, SYSTEM_KEYS, getBaseW, getBaseInYear, getBasePracW, setLocal, clearLocal, baseWeightSum, getTotal, exportJson } from './config';
+import { num, fmt, buzz, wText } from './calc';
 import { Logo, Backdrop, soft } from './ui';
 import ConfirmModal from './ConfirmModal';
 import { fetchAnalytics } from './analytics';
@@ -28,7 +28,7 @@ function WInput({ t, k, pracItem, pracId }) {
           force(x => x + 1);
           window.dispatchEvent(new Event('atn-weights'));
         }} />
-      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400">%</span>
+      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400">{k === '_inYear' || pracId || getTotal(t) === 100 ? '%' : 'kr'}</span>
     </div>
   );
 }
@@ -216,7 +216,7 @@ export default function Admin() {
             </p>
             {SYSTEM_KEYS.map(t => {
               const sys = SYSTEMS[t];
-              const sum = baseWeightSum(t), ok = Math.abs(sum - 100) < 0.001;
+              const sum = baseWeightSum(t), total = getTotal(t), ok = Math.abs(sum - total) < 0.001;
               return (
                 <section key={t} className="card-surface mb-5 rounded-3xl p-5">
                   <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">{sys.name} · {sys.statusLabel}</h2>
@@ -241,7 +241,7 @@ export default function Admin() {
                   <div className="flex items-center justify-between py-1.5"><span className="text-sm">Yıl içi payı</span><WInput t={t} k="_inYear" /></div>
                   <div className="mt-2 flex justify-between border-t border-zinc-900/8 pt-3 text-sm font-medium dark:border-white/10">
                     <span>Komite toplamı</span>
-                    <span className={ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>%{fmt(sum)}{ok ? ' ✓' : ' · 100 olmalı'}</span>
+                    <span className={ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>{wText(t, sum)}{ok ? ' ✓' : ` · ${total} olmalı`}</span>
                   </div>
                 </section>
               );

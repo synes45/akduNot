@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { PERIODS, SYSTEMS, getSystemKey, getW, getInYear, isPersonalOn } from './config';
-import { fieldsOf, itemScore, has, clean, fmt, buzz } from './calc';
+import { fieldsOf, itemScore, has, clean, fmt, buzz, wText } from './calc';
 import { Seg, Field, Chevron, soft } from './ui';
 
 function Committee({ sysKey, item, s, setScore, collapsedFlag, setFlag }) {
@@ -31,7 +31,7 @@ function Committee({ sysKey, item, s, setScore, collapsedFlag, setFlag }) {
         className={`flex w-full items-center gap-3 px-5 py-4 text-left ${done ? 'cursor-pointer' : 'cursor-default'}`}
       >
         <span className="flex-1 text-[15px] font-semibold text-zinc-900 dark:text-white">{item.label}</span>
-        <span className="rounded-full border border-[#F5E6B3]/30 bg-[#F5E6B3]/20 px-2.5 py-0.5 text-xs font-semibold text-[#8F6D1D] dark:text-[#F3E5AB]">%{fmt(getW(sysKey, item))}</span>
+        <span className="rounded-full border border-[#F5E6B3]/30 bg-[#F5E6B3]/20 px-2.5 py-0.5 text-xs font-semibold text-[#8F6D1D] dark:text-[#F3E5AB]">{wText(sysKey, getW(sysKey, item))}</span>
         {done ? (
           <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
             <span className="text-sm font-semibold tabular-nums">{score.toFixed(1)}</span>

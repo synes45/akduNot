@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   PERIODS, SYSTEMS, PASS, getSystemKey, getW, getInYear,
-  getBaseW, getBaseInYear, weightSum, isPersonalOn, setPersonalOn, setPersonal, getPersonalRaw, clearPersonal,
+  getBaseW, getBaseInYear, getTotal, weightSum, isPersonalOn, setPersonalOn, setPersonal, getPersonalRaw, clearPersonal,
   getPracW, getBasePracW, getTheoryW,
 } from './config';
-import { fmt, buzz, clean, num } from './calc';
+import { fmt, buzz, clean, num, wText } from './calc';
 import { Seg, soft } from './ui';
 
 const Panel = ({ title, children }) => (
@@ -69,7 +69,7 @@ export function How({ period, setPeriod, isRepeat, setIsRepeat }) {
             {sys.items.map(i => (
               <tr key={i.id} className="border-t border-zinc-900/6 first:border-0 dark:border-white/10">
                 <td className="py-2.5 text-zinc-500 dark:text-zinc-400">{i.label}</td>
-                <td className="py-2.5 text-right font-semibold tabular-nums">%{fmt(getW(sysKey, i))}</td>
+                <td className="py-2.5 text-right font-semibold tabular-nums">{wText(sysKey, getW(sysKey, i))}</td>
               </tr>
             ))}
           </tbody>
@@ -103,7 +103,7 @@ const Switch = ({ on, onChange, label }) => (
 );
 
 /** Tek bir kişisel yüzde kutusu. Boş bırakılırsa resmi değer (placeholder) kullanılır. */
-function PInput({ sysKey, k, official }) {
+function PInput({ sysKey, k, official, unit = '%' }) {
   const raw = getPersonalRaw(sysKey, k);
   const [draft, setDraft] = useState(raw === undefined ? '' : String(raw).replace('.', ','));
   useEffect(() => {
@@ -123,7 +123,7 @@ function PInput({ sysKey, k, official }) {
           setPersonal(sysKey, k, v === '' ? undefined : num(v));
         }}
       />
-      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400">%</span>
+      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400">{unit}</span>
     </div>
   );
 }
@@ -142,7 +142,7 @@ function PersonalWeights({ period: p0, isRepeat: r0, say }) {
 
   const sysKey = getSystemKey(period, isRepeat);
   const sys = SYSTEMS[sysKey];
-  const sum = weightSum(sysKey), ok = Math.abs(sum - 100) < 0.001;
+  const sum = weightSum(sysKey), total = getTotal(sysKey), ok = Math.abs(sum - total) < 0.001;
 
   return (
     <Panel title="Kişisel yüzdelikler">
@@ -181,7 +181,7 @@ function PersonalWeights({ period: p0, isRepeat: r0, say }) {
                             </span>
                           )}
                         </div>
-                        <PInput sysKey={sysKey} k={i.id} official={getBaseW(sysKey, i)} />
+                        <PInput sysKey={sysKey} k={i.id} official={getBaseW(sysKey, i)} unit={getTotal(sysKey) === 100 ? '%' : 'kr'} />
                       </div>
 
                       {hasPrac && (
@@ -209,7 +209,7 @@ function PersonalWeights({ period: p0, isRepeat: r0, say }) {
 
               <div className="mt-2 flex justify-between border-t border-zinc-900/8 pt-3 text-sm font-medium dark:border-white/10">
                 <span>Komite toplamı</span>
-                <span className={ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>%{fmt(sum)}{ok ? ' ✓' : ' · 100 olmalı'}</span>
+                <span className={ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>{wText(sysKey, sum)}{ok ? ' ✓' : ` · ${total} olmalı`}</span>
               </div>
               <p className="mt-2 text-[11.5px] leading-relaxed text-zinc-400">Boş bıraktığın kutular resmi değeri (soluk yazan) kullanır. Komite içindeki Anatomi/Histoloji pratik paylarını da dilediğin gibi değiştirebilirsin.</p>
 

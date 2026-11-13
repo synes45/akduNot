@@ -5,11 +5,22 @@ import { itemScore, compute } from '../src/calc.js';
 
 const close = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
 
-test('D2 weights follow credits and sum to 100', () => {
+test('D2 weights are credits and sum to 60', () => {
   for (const k of ['d2_normal', 'd2_repeat']) {
-    close(SYSTEMS[k].items.reduce((a, i) => a + getW(k, i), 0), 100);
+    close(SYSTEMS[k].items.reduce((a, i) => a + getW(k, i), 0), 60);
   }
-  close(getW('d2_normal', SYSTEMS.d2_normal.items[0]), (14 * 100) / 60);
+  close(getW('d2_normal', SYSTEMS.d2_normal.items[0]), 14);
+  assert.equal(SYSTEMS.d2_normal.items.at(-1).label, 'Makale saati + Edebiyat');
+});
+
+test('D2 in-year: one item at 60 and the rest 0 gives credit share', () => {
+  // only k1 (14 credits) scores 100 -> in-year part 14/60 * 100
+  const s = { k1: '100', k1_anatomi: '13', k1_histo: '100', k1_pdo: '100', final: '0' };
+  for (const i of SYSTEMS.d2_normal.items.slice(1)) {
+    s[i.id] = '0';
+    if (i.prac) { s[`${i.id}_anatomi`] = '0'; s[`${i.id}_histo`] = '0'; s[`${i.id}_pdo`] = '0'; }
+  }
+  close(compute('d2_normal', s).genel, (14 / 60) * 100 * 0.6);
 });
 
 test('D2 committee: 84% theory + anatomy(13) + histology(100 -> 3), then 85/15 with PDO', () => {

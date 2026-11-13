@@ -11,7 +11,7 @@ const ROOT = join(HERE, 'dist');
 const DATA_FILE = process.env.DATA_FILE || join(HERE, 'data', 'weights.json');
 const PORT = process.env.PORT || 3000;
 // SHA-256 of the admin password (same value the admin page checks)
-const HASH = process.env.ADMIN_HASH || '515a8eb66dc972319cdf060dd242e7f6df2ba71e150077f57cf1f099849ec173';
+const HASH = process.env.ADMIN_HASH || '944a8abc097c3c6dac783c882030ad6c23b2c7acc3c8b8670bdf60df11d745c9';
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json',
   '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json' };
 

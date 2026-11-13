@@ -6,8 +6,7 @@ import { Logo, Backdrop, soft } from './ui';
 import ConfirmModal from './ConfirmModal';
 import { fetchAnalytics } from './analytics';
 
-// Şifre: AkdenizSpace2026! (SHA-256 özeti)
-const HASH = '515a8eb66dc972319cdf060dd242e7f6df2ba71e150077f57cf1f099849ec173';
+const HASH = '944a8abc097c3c6dac783c882030ad6c23b2c7acc3c8b8670bdf60df11d745c9';
 const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))]
   .map(b => b.toString(16).padStart(2, '0')).join('');
 

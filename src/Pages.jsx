@@ -249,9 +249,10 @@ export function Settings({ theme, setTheme, onClearAll, period, isRepeat, say })
       <footer className="mt-12 mb-4 flex flex-col items-center justify-center text-center">
         <div className="flex items-center justify-center rounded-2xl p-2">
           <img
-            src="/turkmsic-logo.png"
-            alt="Akdeniz TÖB - TurkMSIC"
-            className="h-16 w-auto max-w-[190px] object-contain select-none drop-shadow-sm opacity-90 transition-opacity hover:opacity-100 dark:brightness-105"
+            src="/akdeniz-tob-logo.png"
+            alt="Akdeniz Tıp Öğrencileri Birliği"
+            width="225" height="225"
+            className="size-24 max-w-[190px] object-contain select-none drop-shadow-sm opacity-90 transition-opacity hover:opacity-100 dark:brightness-105"
             loading="lazy"
           />
         </div>
@@ -260,7 +261,12 @@ export function Settings({ theme, setTheme, onClearAll, period, isRepeat, say })
         </p>
         <p className="mt-1 max-w-[320px] text-[11.5px] leading-relaxed text-zinc-500 dark:text-zinc-400">
           Akdeniz TÖB Proje ve Girişimler bünyesinde <br />
-          <span className="font-medium text-zinc-700 dark:text-zinc-300"> Ali Efe Küçükoğlu</span> tarafından geliştirilmiştir.
+          <a href="https://efewei.space" target="_blank" rel="noopener" className="inline-flex items-center gap-1 font-medium text-zinc-700 underline-offset-2 hover:underline dark:text-zinc-300">
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="size-3.5 fill-none stroke-current" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" />
+            </svg>
+            Ali Efe Küçükoğlu
+          </a> tarafından geliştirilmiştir.
         </p>
       </footer>
     </div>

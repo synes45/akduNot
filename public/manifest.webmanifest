@@ -1,7 +1,7 @@
 {
-  "name": "AkduTip.space",
+  "name": "Akdeniz Tıp | Not Hesaplama",
   "short_name": "AkduTip",
-  "description": "Dönem 1, 2 ve 3 komite ve final not hesaplayıcı",
+  "description": "Akdeniz Tıp Dönem 1, 2 ve 3 komite ve final not hesaplayıcı",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

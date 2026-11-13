@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 // SHA-256 of the admin password (same value the admin page checks)
 const HASH = process.env.ADMIN_HASH || '944a8abc097c3c6dac783c882030ad6c23b2c7acc3c8b8670bdf60df11d745c9';
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json',
-  '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json' };
+  '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml' };
 
 const body = req => new Promise((ok, no) => {
   let s = '';

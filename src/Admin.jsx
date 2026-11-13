@@ -35,7 +35,7 @@ function WInput({ t, k, pracItem, pracId }) {
 }
 
 export default function Admin() {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem('atn_admin') === '1');
+  const [authed, setAuthed] = useState(() => !!sessionStorage.getItem('atn_admin'));
   const [pw, setPw] = useState('');
   const [err, setErr] = useState('');
   const [shake, setShake] = useState(0);
@@ -73,7 +73,7 @@ export default function Admin() {
   const login = async e => {
     e.preventDefault();
     if (!(window.crypto && crypto.subtle)) return setErr('Güvenli bağlantı (https) gerekli.');
-    if ((await sha(pw)) === HASH) { sessionStorage.setItem('atn_admin', '1'); setAuthed(true); }
+    if ((await sha(pw)) === HASH) { sessionStorage.setItem('atn_admin', pw); setAuthed(true); }
     else { setErr('Şifre yanlış.'); setPw(''); setShake(s => s + 1); buzz(30); }
   };
 
@@ -83,6 +83,17 @@ export default function Admin() {
     setConfirmOpen(false);
     say('Değişiklikler sıfırlandı');
     setTimeout(() => window.location.reload(), 500);
+  };
+
+  const publish = async () => {
+    try {
+      const r = await fetch('/api/weights', { method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: sessionStorage.getItem('atn_admin'), weights: JSON.parse(exportJson()) }) });
+      if (!r.ok) return say(r.status === 401 ? 'Yetki hatası: çıkış yapıp tekrar gir' : 'Yayınlanamadı');
+      clearLocal();
+      say('Herkese yayınlandı');
+      setTimeout(() => window.location.reload(), 700);
+    } catch { say('Sunucuya ulaşılamadı'); }
   };
 
   return (
@@ -202,7 +213,7 @@ export default function Admin() {
             </section>
 
             <p className="mb-5 text-sm text-zinc-500 dark:text-zinc-400">
-              Değişiklikler bu cihazda anında önizlenir. Herkese yayınlamak için aşağıdaki JSON'u <code className="rounded bg-zinc-900/8 px-1 dark:bg-white/10">public/weights.json</code> dosyasına yapıştırıp siteyi yeniden yayınla.
+              Değişiklikler bu cihazda anında önizlenir. Herkese göstermek için en alttaki "Herkese yayınla" düğmesine bas.
             </p>
             {SYSTEM_KEYS.map(t => {
               const sys = SYSTEMS[t];
@@ -246,6 +257,8 @@ export default function Admin() {
                 <button className="h-11 rounded-2xl bg-zinc-100 font-medium transition active:scale-[.97] dark:bg-white/10"
                   onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([exportJson()], { type: 'application/json' })); a.download = 'weights.json'; a.click(); URL.revokeObjectURL(a.href); }}>İndir</button>
               </div>
+              <button className="mt-3 h-12 w-full rounded-2xl bg-gradient-to-b from-[#F7EBBF] to-[#E5CD82] font-semibold text-zinc-900 shadow-md shadow-[#E5CD82]/20 transition active:scale-[.98]"
+                onClick={publish}>Herkese yayınla</button>
               <button className="mt-2.5 h-11 w-full rounded-2xl text-sm font-medium text-rose-600 transition active:scale-[.98] dark:text-rose-400"
                 onClick={() => setConfirmOpen(true)}>Bu cihazdaki değişiklikleri sıfırla</button>
             </section>

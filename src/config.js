@@ -3,7 +3,7 @@
  *
  * Ağırlıklar şu sırayla belirlenir:
  *   1. Bu cihazdaki yönetici önizlemesi (localStorage, /admin'den)
- *   2. public/weights.json (yayınlanan, herkesin gördüğü değerler)
+ *   2. /api/weights (sunucuda saklanan, herkesin gördüğü değerler; server.js)
  *   3. Aşağıdaki varsayılanlar (w)
  */
 
@@ -157,7 +157,7 @@ const pick = (sysKey, key, fallback) => {
 };
 
 export const ready = Promise.race([
-  fetch('/weights.json', { cache: 'no-store' })
+  fetch('/api/weights', { cache: 'no-store' })
     .then(r => (r.ok ? r.json() : {}))
     .then(j => { remote = j || {}; })
     .catch(() => {}),

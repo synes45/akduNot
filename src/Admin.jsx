@@ -20,7 +20,7 @@ function WInput({ t, k, pracItem, pracId }) {
   return (
     <div className="relative w-24">
       <input className="field !h-10 !rounded-xl pr-8 text-right !text-[15px]" type="text" inputMode="decimal"
-        value={value}
+        value={Math.round(value * 100) / 100}
         onChange={e => {
           let v = e.target.value.replace(/[^0-9.,]/g, '');
           if (num(v) > 100) v = '100';

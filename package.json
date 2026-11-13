@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
+    "test": "esbuild test/calc.test.mjs --bundle --platform=node --format=esm --outfile=test/.out.mjs --log-level=error && node --test test/.out.mjs",
     "preview": "vite preview --host"
   },
   "dependencies": {

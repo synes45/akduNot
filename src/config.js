@@ -19,6 +19,25 @@ export const PERIODS = [
 
 export const getSystemKey = (period, isRepeat) => `${period}_${isRepeat ? 'repeat' : 'normal'}`;
 
+// Dönem 2: yıl içi 60 kredi. w = kredi / 60 × 100 (yüzde). Komiteler PDÖ'lüdür.
+// Pratik: w = nota etkisi (%), in = girilen notun üst sınırı (yoksa etki kadar, yani doğrudan puan).
+const cr = k => (k * 100) / 60;
+const D2_PRAC = [
+  { id: 'anatomi', label: 'Anatomi pratik', max: 13 },
+  { id: 'histo', label: 'Histoloji pratik', max: 3, in: 100 },
+];
+const D2_ITEMS = [
+  { id: 'k1', label: 'Komite 1', w: cr(14), pdo: true, prac: D2_PRAC },
+  { id: 'k2', label: 'Komite 2', w: cr(12), pdo: true, prac: D2_PRAC },
+  { id: 'k3', label: 'Komite 3', w: cr(12), pdo: true, prac: D2_PRAC },
+  { id: 'k4', label: 'Komite 4', w: cr(8), pdo: true, prac: D2_PRAC },
+  { id: 'k5', label: 'Komite 5', w: cr(6), pdo: true, prac: D2_PRAC },
+  { id: 'ocm', label: 'ÖÇM', w: cr(3) },
+  { id: 'dsbb', label: 'DSBB', w: cr(2) },
+  { id: 'makale', label: 'Makale saati', w: cr(1) },
+  { id: 'edebiyat', label: 'Edebiyat', w: cr(2) },
+];
+
 export const SYSTEMS = {
   d1_normal: {
     period: 'd1', isRepeat: false,
@@ -51,36 +70,12 @@ export const SYSTEMS = {
   d2_normal: {
     period: 'd2', isRepeat: false,
     name: 'Dönem 2', statusLabel: 'İlk defa alanlar', inYear: 60,
-    items: [
-      { id: 'k1', label: 'Komite 1', w: 25.13, pdo: true,
-        prac: [{ id: 'anatomi', label: 'Anatomi pratik', max: 18 }, { id: 'histo', label: 'Histoloji pratik', max: 7 }] },
-      { id: 'k2', label: 'Komite 2', w: 22.3, pdo: true,
-        prac: [{ id: 'anatomi', label: 'Anatomi pratik', max: 18 }, { id: 'histo', label: 'Histoloji pratik', max: 7 }] },
-      { id: 'k3', label: 'Komite 3', w: 23.29, pdo: true,
-        prac: [{ id: 'anatomi', label: 'Anatomi pratik', max: 18 }, { id: 'histo', label: 'Histoloji pratik', max: 7 }] },
-      { id: 'k4', label: 'Komite 4', w: 17.3, pdo: true,
-        prac: [{ id: 'anatomi', label: 'Anatomi pratik', max: 18 }, { id: 'histo', label: 'Histoloji pratik', max: 7 }] },
-      { id: 'k5', label: 'Komite 5', w: 11.98, pdo: true,
-        prac: [{ id: 'anatomi', label: 'Anatomi pratik', max: 6 }, { id: 'histo', label: 'Histoloji pratik', max: 3 }] },
-      { id: 'ocm', label: 'ÖÇM', w: 0 },
-    ],
+    items: D2_ITEMS,
   },
   d2_repeat: {
     period: 'd2', isRepeat: true,
     name: 'Dönem 2', statusLabel: 'Dönem tekrarı', inYear: 60,
-    items: [
-      { id: 'k1', label: 'Komite 1', w: 25.13, pdo: true,
-        prac: [{ id: 'anatomi', label: 'Anatomi pratik', max: 18 }, { id: 'histo', label: 'Histoloji pratik', max: 7 }] },
-      { id: 'k2', label: 'Komite 2', w: 22.3, pdo: true,
-        prac: [{ id: 'anatomi', label: 'Anatomi pratik', max: 18 }, { id: 'histo', label: 'Histoloji pratik', max: 7 }] },
-      { id: 'k3', label: 'Komite 3', w: 23.29, pdo: true,
-        prac: [{ id: 'anatomi', label: 'Anatomi pratik', max: 18 }, { id: 'histo', label: 'Histoloji pratik', max: 7 }] },
-      { id: 'k4', label: 'Komite 4', w: 17.3, pdo: true,
-        prac: [{ id: 'anatomi', label: 'Anatomi pratik', max: 18 }, { id: 'histo', label: 'Histoloji pratik', max: 7 }] },
-      { id: 'k5', label: 'Komite 5', w: 11.98, pdo: true,
-        prac: [{ id: 'anatomi', label: 'Anatomi pratik', max: 6 }, { id: 'histo', label: 'Histoloji pratik', max: 3 }] },
-      { id: 'ocm', label: 'ÖÇM', w: 0 },
-    ],
+    items: D2_ITEMS,
   },
   d3_normal: {
     period: 'd3', isRepeat: false,

@@ -19,7 +19,7 @@ export function fieldsOf(item, sysKey) {
   (item.prac || []).forEach(p => {
     const pw = sysKey ? getPracW(sysKey, item.id, p.id) : p.max;
     if (pw > 0) {
-      f.push({ id: `${item.id}_${p.id}`, kind: 'prac', max: pw, label: p.label });
+      f.push({ id: `${item.id}_${p.id}`, kind: 'prac', max: p.in ?? pw, w: pw, label: p.label });
     }
   });
   if (item.pdo) f.push({ id: `${item.id}_pdo`, kind: 'pdo', max: 100, label: 'PDÖ' });
@@ -36,12 +36,12 @@ export function itemScore(item, s, sysKey) {
     const thW = getTheoryW(sysKey, item);
     exam = num(s[item.id]) * (thW / 100);
     pracFields.forEach(pf => {
-      exam += num(s[pf.id]);
+      exam += num(s[pf.id]) * pf.w / pf.max;
     });
   } else {
     exam = num(s[item.id]) * (item.mult ?? 1);
     pracFields.forEach(pf => {
-      exam += num(s[pf.id]);
+      exam += num(s[pf.id]) * pf.w / pf.max;
     });
   }
 
